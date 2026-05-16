@@ -1,7 +1,3 @@
-# customer-support-bi-databricks
-Pipeline completo de BI com Databricks — Bronze/Silver/Gold, ETL, EDA e Dashboard
-
-
 # 🎯 Customer Support BI — Databricks Pipeline
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
