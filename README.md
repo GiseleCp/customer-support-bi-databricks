@@ -4,9 +4,10 @@
 ![Databricks](https://img.shields.io/badge/Databricks-Free%20Edition-red)
 ![PySpark](https://img.shields.io/badge/PySpark-3.x-orange)
 ![Delta Lake](https://img.shields.io/badge/Delta%20Lake-Medallion-green)
-![Power BI](https://img.shields.io/badge/Power%20BI-Connected-yellow)
+![Power BI](https://img.shields.io/badge/Power%20BI-In%20Progress-yellow)
+![Status](https://img.shields.io/badge/Status-Concluído-brightgreen)
 
-Pipeline completo de Business Intelligence construído com **Databricks**, seguindo a **Medallion Architecture** (Bronze → Silver → Gold), com ETL em PySpark, EDA avançado e Dashboard gerencial.
+Pipeline completo de Business Intelligence construído com **Databricks**, seguindo a **Medallion Architecture** (Bronze → Silver → Gold), com ETL em PySpark, EDA avançado, Dashboard gerencial, SQL analítico, orquestração de pipeline e Time Travel com Delta Lake.
 
 ---
 
@@ -14,7 +15,7 @@ Pipeline completo de Business Intelligence construído com **Databricks**, segui
 
 Análise completa de **8.469 tickets de suporte ao cliente** de uma empresa de tecnologia, cobrindo o período de **Janeiro/2020 a Dezembro/2021**.
 
-O projeto simula um ambiente enterprise real, desde a ingestão do dado bruto até a visualização gerencial, passando por todas as etapas de um pipeline de dados moderno.
+O projeto simula um ambiente enterprise real, desde a ingestão do dado bruto até a visualização gerencial, passando por todas as etapas de um pipeline de dados moderno com padrões de mercado.
 
 ---
 
@@ -23,49 +24,68 @@ O projeto simula um ambiente enterprise real, desde a ingestão do dado bruto at
 ```
 CSV Bruto
     ↓
-┌─────────────────────────────────────────────────────────┐
-│                    DATA LAKE                            │
-│                                                         │
-│  🥉 BRONZE          🥈 SILVER          🥇 GOLD          │
-│  Dado bruto    →   Dado limpo    →   Star Schema        │
-│  inferSchema=F     Tipos corretos    9 tabelas Delta    │
-│  tudo string       Nulos tratados    Pronto p/ consumo  │
-│                    Duplicatas off                       │
-│                    Placeholder off                      │
-└─────────────────────────────────────────────────────────┘
-    ↓                     ↓                    ↓
-Notebook 01          Notebook 02          Notebook 04
-                                               ↓
-                                        ┌──────────────┐
-                                        │   ANÁLISE    │
-                                        │  Notebook 03 │
-                                        │     EDA      │
-                                        │  Notebook 05 │
-                                        │  EDA Viz     │
-                                        │  Notebook 06 │
-                                        │  BI Dashboard│
-                                        └──────────────┘
-                                               ↓
-                                          Power BI
+┌──────────────────────────────────────────────────────────────┐
+│                       DATA LAKE                              │
+│                                                              │
+│  🥉 BRONZE          🥈 SILVER              🥇 GOLD           │
+│  Dado bruto    →   Dado limpo        →   Star Schema         │
+│  inferSchema=F     Tipos corretos        9 tabelas Delta     │
+│  tudo string       Nulos tratados        Pronto p/ consumo   │
+│                    Duplicatas off                            │
+│                    Placeholder off                           │
+│                    9 testes qualidade                        │
+└──────────────────────────────────────────────────────────────┘
+         ↓                  ↓                    ↓
+   Notebook 01        Notebook 02          Notebook 04
+                                                ↓
+                                    ┌───────────────────┐
+                                    │      ANÁLISE      │
+                                    │  03 — EDA         │
+                                    │  05 — EDA Viz     │
+                                    │  06 — BI Dashboard│
+                                    │  07 — SQL Queries │
+                                    └───────────────────┘
+                                                ↓
+                                    ┌───────────────────┐
+                                    │    PRODUÇÃO       │
+                                    │  Job Orquestrado  │
+                                    │  Time Travel      │
+                                    │  Databricks SQL   │
+                                    └───────────────────┘
+                                                ↓
+                                    ┌───────────────────┐
+                                    │  VISUALIZAÇÃO     │
+                                    │  Databricks       │
+                                    │  Genie Dashboard  │
+                                    │  Power BI (WIP)   │
+                                    └───────────────────┘
 ```
 
 ---
 
-## 📁 Estrutura do Projeto
+## 📁 Estrutura do Repositório
 
 ```
 customer-support-bi-databricks/
 │
 ├── notebooks/
-│   ├── 01_bronze_ingestao.py         # Ingestão do CSV → Delta Lake Bronze
-│   ├── 02_silver_etl.py              # ETL, limpeza e tipagem → Silver
-│   ├── 03_eda.py                     # Análise Exploratória de Dados
-│   ├── 04_gold_modelagem.py          # Star Schema → Gold
-│   ├── 05_eda_visualizacao.py        # Gráficos EDA avançados
-│   └── 06_bi_dashboard.py            # Dashboard BI gerencial
+│   ├── 00_data_profiling.ipynb        # Diagnóstico do dado bruto
+│   ├── 01_bronze_ingestao.ipynb       # Ingestão CSV → Delta Lake Bronze
+│   ├── 02_silver_etl.ipynb            # ETL, limpeza e 9 testes de qualidade
+│   ├── 03_eda.ipynb                   # Análise Exploratória de Dados
+│   ├── 04_gold_modelagem.ipynb        # Star Schema → Gold
+│   ├── 05_eda_visualizacao.ipynb      # 12 gráficos EDA avançados
+│   ├── 06_bi_dashboard.ipynb          # 9 gráficos BI gerenciais
+│   ├── 07_sql_queries.ipynb           # SQL analítico + View consolidada
+│   ├── 08_time_travel.ipynb           # Delta Lake Time Travel e restauração
+│   └── 09_register_tables.ipynb       # Registro das tabelas no Unity Catalog
 │
-├── charts/
-│   ├── eda/                          # Gráficos exploratórios
+├── assets/
+│   ├── pipeline_job.png               # Print do Job orquestrado no Databricks
+│   └── ...                            # Prints do ambiente
+│
+├── images/
+│   ├── eda/                           # Gráficos exploratórios
 │   │   ├── 01_ticket_status.png
 │   │   ├── 02_ticket_priority.png
 │   │   ├── 03_ticket_type_donut.png
@@ -79,7 +99,7 @@ customer-support-bi-databricks/
 │   │   ├── 11_violin_satisfacao.png
 │   │   └── 12_gauge_resolucao.png
 │   │
-│   └── bi/                           # Gráficos BI gerenciais
+│   └── bi/                            # Gráficos BI gerenciais
 │       ├── 01_kpi_executivo.png
 │       ├── 02_funil_resolucao.png
 │       ├── 03_evolucao_resolucao.png
@@ -91,7 +111,7 @@ customer-support-bi-databricks/
 │       └── 09_painel_alertas.png
 │
 ├── data/
-│   └── customer_support_tickets_original.csv   # Dado bruto original
+│   └── customer_support_tickets - original.csv   # Dataset original
 │
 └── README.md
 ```
@@ -100,18 +120,19 @@ customer-support-bi-databricks/
 
 ## 🛠️ Stack Tecnológica
 
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| Databricks | Free Edition | Plataforma principal |
-| Apache Spark | 3.x | Processamento distribuído |
-| PySpark | 3.x | ETL e transformações |
-| Delta Lake | 3.x | Storage ACID com versionamento |
-| Unity Catalog | - | Governança e volumes |
-| Python | 3.10 | Linguagem principal |
-| Pandas | 2.x | Manipulação local |
-| Matplotlib | 3.x | Visualizações |
-| Seaborn | 0.13 | Visualizações estatísticas |
-| Power BI | Desktop | Dashboard final |
+| Tecnologia | Uso |
+|------------|-----|
+| **Databricks Free Edition** | Plataforma principal |
+| **Apache Spark / PySpark** | Processamento distribuído e ETL |
+| **Delta Lake** | Storage ACID com versionamento e Time Travel |
+| **Unity Catalog** | Governança, volumes e tabelas gerenciadas |
+| **Databricks Jobs** | Orquestração do pipeline |
+| **Databricks SQL** | Consultas analíticas e views |
+| **Databricks Genie** | Dashboard com IA generativa |
+| **Python 3.10** | Linguagem principal |
+| **Pandas** | Manipulação local para visualizações |
+| **Matplotlib / Seaborn** | Visualizações EDA e BI |
+| **Power BI Desktop** | Dashboard gerencial (em progresso) |
 
 ---
 
@@ -125,78 +146,70 @@ customer-support-bi-databricks/
 | **Colunas originais** | 17 |
 | **Formato** | CSV |
 
-### Colunas do dataset original
+---
 
-| Coluna | Tipo Original | Tipo Silver | Descrição |
-|--------|--------------|-------------|-----------|
-| Ticket ID | string | integer | Identificador único |
-| Customer Name | string | string | Nome do cliente |
-| Customer Email | string | string | Email do cliente |
-| Customer Age | string | integer | Idade do cliente |
-| Customer Gender | string | string | Gênero do cliente |
-| Product Purchased | string | string | Produto adquirido |
-| Date of Purchase | string | date | Data da compra |
-| Ticket Type | string | string | Tipo do ticket |
-| Ticket Subject | string | string | Assunto do ticket |
-| Ticket Description | string | string | Descrição do problema |
-| Ticket Status | string | string | Status atual |
-| Resolution | string | string | Texto da resolução |
-| Ticket Priority | string | string | Prioridade |
-| Ticket Channel | string | string | Canal de atendimento |
-| First Response Time | string | timestamp | Hora do primeiro atendimento |
-| Time to Resolution | string | timestamp | Hora da resolução |
-| Customer Satisfaction Rating | string | double | Nota de satisfação (1-5) |
+## 🔄 Pipeline Completo — Etapas Detalhadas
+
+### 00 — Data Profiling
+Diagnóstico completo do dado bruto **antes** de qualquer transformação.
+
+| Verificação | Resultado |
+|-------------|-----------|
+| Duplicatas | ✅ Zero |
+| Anomalias numéricas | ✅ Zero |
+| Consistência entre colunas | ✅ 100% |
+| Placeholder `{product_purchased}` | 🔴 100% das descrições |
+| Nulos críticos | 🔴 67.3% em 3 colunas |
+| First Response nulos | 🟡 33.3% |
 
 ---
 
-## 🔄 Pipeline — Etapas Detalhadas
+### 01 — Bronze (Ingestão)
+Ingestão do arquivo bruto para o Data Lake sem transformações.
 
-### 🥉 Etapa 1 — Bronze (01_bronze_ingestao.py)
-
-Ingestão do arquivo bruto para o Data Lake sem nenhuma transformação.
-
-**O que faz:**
-- Lê o CSV do Unity Catalog Volume (`/Volumes/workspace/default/raw/`)
+- Lê o CSV do Unity Catalog Volume
 - Preserva todos os dados como string (`inferSchema=false`)
-- Trata quebras de linha no campo `Ticket_Description` (`multiLine=true`)
 - Renomeia colunas substituindo espaços por underscore
-- Salva em formato **Delta Lake** na camada Bronze
+- Salva em formato **Delta Lake**
 
 **Path:** `/Volumes/workspace/default/raw/bronze/`
 
 ---
 
-### 🥈 Etapa 2 — Silver (02_silver_etl.py)
+### 02 — Silver (ETL + Qualidade)
+Limpeza, tipagem e validação dos dados.
 
-Limpeza, tipagem e tratamento de qualidade dos dados.
-
-**Transformações aplicadas:**
+**Transformações:**
 
 | Transformação | Detalhe |
 |--------------|---------|
-| Correção de tipos | 6 colunas convertidas para tipos corretos |
-| Tratamento de nulos | `Resolution` preenchida com "Sem resolução" |
+| Correção de tipos | 6 colunas convertidas |
+| Tratamento de nulos | `Resolution` → "Sem resolução" |
 | Remoção de duplicatas | Baseada em `Ticket_ID` |
 | Limpeza de placeholder | `{product_purchased}` → `[produto]` |
-| Coluna de controle | `_loaded_at` com timestamp de processamento |
+| Coluna de controle | `_loaded_at` com timestamp |
 
-**Nulos identificados e tratados:**
+**9 Testes de Qualidade — todos aprovados ✅:**
 
-| Coluna | Nulos | Motivo |
-|--------|-------|--------|
-| First_Response_Time | 2.819 | Tickets sem primeira resposta |
-| Time_to_Resolution | 5.700 | Tickets abertos/pendentes |
-| Customer_Satisfaction_Rating | 5.700 | Só preenchido quando resolvido |
+```
+✅ Teste 1 — Volume: 8.469 registros
+✅ Teste 2 — Ticket_ID sem nulos
+✅ Teste 3 — Ticket_ID único
+✅ Teste 4 — Customer_Age no range (18-100)
+✅ Teste 5 — Satisfaction no range (1-5)
+✅ Teste 6 — Placeholder removido
+✅ Teste 7 — Resolution sem nulos
+✅ Teste 8 — Tickets Closed têm Satisfaction Rating
+✅ Teste 9 — _loaded_at preenchido
+🎉 Silver aprovada para Gold!
+```
 
 **Path:** `/Volumes/workspace/default/raw/silver/`
 
 ---
 
-### 📊 Etapa 3 — EDA (03_eda.py)
-
-Análise Exploratória dos dados limpos da camada Silver.
-
-**Análises realizadas:**
+### 03 — EDA (Análise Exploratória)
+Análise dos dados limpos da Silver.
 
 | Análise | Insight Principal |
 |---------|------------------|
@@ -211,74 +224,121 @@ Análise Exploratória dos dados limpos da camada Silver.
 
 ---
 
-### 🥇 Etapa 4 — Gold / Star Schema (04_gold_modelagem.py)
-
-Modelagem dimensional seguindo o padrão **Star Schema**.
-
-**Tabelas criadas:**
+### 04 — Gold (Star Schema)
+Modelagem dimensional com padrão **Star Schema**.
 
 | Tabela | Linhas | Descrição |
 |--------|--------|-----------|
 | `f_customer_support_tickets` | 8.469 | Tabela fato central |
-| `dim_customer` | 8.320 | Dimensão cliente com Age_Group |
-| `dim_product` | 42 | Dimensão produto |
-| `dim_type` | 5 | Dimensão tipo de ticket |
-| `dim_subject` | 16 | Dimensão assunto |
-| `dim_status` | 3 | Dimensão status |
-| `dim_priority` | 4 | Dimensão prioridade |
-| `dim_channel` | 4 | Dimensão canal |
-| `dim_ticket_description` | 8.469 | Dimensão descrição com classificação NLP |
-| `dim_calendario` | 730 | Dimensão calendário (730 dias) |
+| `dim_customer` | 8.320 | Cliente com Age_Group |
+| `dim_product` | 42 | Produto |
+| `dim_type` | 5 | Tipo de ticket |
+| `dim_subject` | 16 | Assunto |
+| `dim_status` | 3 | Status |
+| `dim_priority` | 4 | Prioridade |
+| `dim_channel` | 4 | Canal |
+| `dim_ticket_description` | 8.469 | Descrição com 16 categorias NLP |
+| `dim_calendario` | 730 | Calendário (730 dias) |
 
-**Métricas calculadas na tabela fato:**
+**Métricas calculadas na fato:**
 
-| Métrica | Cálculo |
-|---------|---------|
-| `Response_Time_Hours` | Hora + minutos do primeiro atendimento |
-| `Resolution_Time_Hours` | Diferença em horas entre resposta e resolução |
-| `Is_Resolved` | Flag 1/0 — ticket fechado ou não |
-| `Purchase_Year` | Ano extraído da data de compra |
-| `Purchase_Month` | Mês extraído da data de compra |
+| Métrica | Descrição |
+|---------|-----------|
+| `Response_Time_Hours` | Tempo até primeira resposta |
+| `Resolution_Time_Hours` | Tempo total de resolução |
+| `Is_Resolved` | Flag 1/0 — ticket fechado |
+| `Purchase_Year` | Ano da compra |
+| `Purchase_Month` | Mês da compra |
 
 **Path:** `/Volumes/workspace/default/raw/gold/`
 
 ---
 
-### 📈 Etapa 5 — EDA Visualização (05_eda_visualizacao.py)
+### 05 — EDA Visualização
+12 gráficos exploratórios avançados.
 
-Gráficos exploratórios avançados usando Matplotlib e Seaborn.
-
-| Gráfico | Tipo | Insight |
-|---------|------|---------|
-| Distribuição por Status | Bar chart | 67% dos tickets ainda abertos |
-| Distribuição por Prioridade | Bar chart | Distribuição uniforme — sem hierarquia real |
-| Distribuição por Tipo | Donut chart | Refund Request lidera com 20.7% |
-| Volume por Canal | Horizontal bar | Email domina com 25.3% |
-| Satisfação por Canal | Radar chart | Chat único acima da média |
-| Satisfação por Prioridade/Tipo | Heatmap | Refund+High = 2.80 — pior combinação |
-| Volume Mensal | Line chart | Sem sazonalidade |
-| Volume Stacked | Stacked bar | 2020 e 2021 praticamente iguais |
-| Top 10 Produtos | Horizontal bar | Canon EOS lidera |
-| Distribuição de Idade | Histogram+KDE | Uniforme entre 18-70 anos |
-| Satisfação por Tipo | Violin plot | Distribuição bimodal em todos os tipos |
-| Taxa de Resolução | Gauge chart | 32.7% — zona crítica |
+| # | Gráfico | Tipo |
+|---|---------|------|
+| 01 | Distribuição por Status | Bar chart |
+| 02 | Distribuição por Prioridade | Bar chart |
+| 03 | Distribuição por Tipo | Donut chart |
+| 04 | Volume por Canal | Horizontal bar |
+| 05 | Satisfação por Canal | Radar chart |
+| 06 | Satisfação por Prioridade/Tipo | Heatmap |
+| 07 | Volume Mensal | Line chart |
+| 08 | Volume Stacked | Stacked bar |
+| 09 | Top 10 Produtos | Horizontal bar gradiente |
+| 10 | Distribuição de Idade | Histogram + KDE |
+| 11 | Satisfação por Tipo | Violin plot |
+| 12 | Taxa de Resolução | Gauge chart |
 
 ---
 
-### 📊 Etapa 6 — BI Dashboard (06_bi_dashboard.py)
-
-Dashboard gerencial com foco em tomada de decisão.
+### 06 — BI Dashboard
+9 visuais gerenciais focados em tomada de decisão.
 
 | Visual | Pergunta Respondida |
 |--------|---------------------|
 | KPI Cards + Gauge | Como está a saúde geral do suporte? |
-| Evolução da Taxa de Resolução | Estamos melhorando ao longo do tempo? |
+| Evolução da Taxa de Resolução | Estamos melhorando? |
 | Funil de Resolução | Onde estou falhando por prioridade? |
 | Tendência de Satisfação | A satisfação está melhorando? |
-| Matriz Estratégica de Produtos | Quais produtos precisam de atenção? |
-| Ranking de Assuntos Críticos | Onde focar para melhorar a satisfação? |
-| Scorecard Executivo | Performance completa por tipo de ticket |
+| Matriz Estratégica Produtos | Quais produtos precisam de atenção? |
+| Ranking Assuntos Críticos | Onde focar para melhorar? |
+| Scorecard Executivo | Performance por tipo de ticket |
 | Painel de Alertas | Quais ações tomar agora? |
+
+---
+
+### 07 — SQL Queries Analíticas
+Consultas SQL sobre as tabelas Gold com view consolidada.
+
+| Query | O que analisa |
+|-------|--------------|
+| 1 | Visão geral da fato |
+| 2 | Satisfação canal x tipo |
+| 3 | Top 10 produtos por insatisfação |
+| 4 | Evolução mensal real vs meta |
+| 5 | Performance por faixa etária |
+| 6 | View consolidada `vw_performance_geral` |
+| 7 | Performance prioridade x canal |
+
+---
+
+### 08 — Time Travel Delta Lake
+Demonstração de versionamento e recuperação de dados.
+
+```
+Versão 0  → Primeira carga Silver
+Versão 1-6 → Reprocessamentos e Jobs
+Versão 7  → Simulação de erro (coluna removida) 🔴
+Versão 8  → RESTORE — recuperação em < 5 segundos ✅
+```
+
+**Resultado:** 8.469 linhas recuperadas sem perda de dados.
+
+---
+
+### 09 — Register Tables
+Registro das tabelas Gold no Unity Catalog para uso no Databricks SQL e Genie.
+
+---
+
+## ⚙️ Pipeline Orquestrado — Databricks Jobs
+
+Pipeline completo executado automaticamente em sequência:
+
+```
+00_data_profiling → 01_bronze → 02_silver → 03_eda → 
+04_gold → 05_eda_viz → 06_bi_dashboard → 07_sql_queries
+```
+
+| Atributo | Valor |
+|----------|-------|
+| **Job name** | `pipeline_customer_support_bi` |
+| **Duração** | 3 minutos e 5 segundos |
+| **Status** | ✅ Succeeded |
+| **Trigger** | Manual / Agendável |
 
 ---
 
@@ -298,19 +358,22 @@ Dashboard gerencial com foco em tomada de decisão.
 **🔴 Paradoxo da prioridade**
 > Tickets Critical têm satisfação 2.96 e taxa de resolução 34.1% — quase igual ao Low (31.2%). O SLA por prioridade provavelmente não existe ou não está sendo cumprido.
 
-**🟡 Paradoxo do cancelamento**
-> Cancellation Request tem satisfação 3.03 — acima da média geral. O problema não é o atendimento do cancelamento, mas o que levou o cliente a cancelar.
-
-**🟢 Canal Chat subutilizado**
-> Chat tem o menor volume (24.5%) mas a maior satisfação (3.08). Migrar 10% dos tickets de email para chat poderia elevar a satisfação média acima de 3.0.
-
 **🔴 Pior combinação identificada**
 > Refund Request + prioridade High = satisfação 2.80 — a célula mais crítica do heatmap.
+
+**🟡 Paradoxo do cancelamento**
+> Cancellation Request tem satisfação 3.03 — acima da média. O problema não é o atendimento, mas o que levou o cliente a cancelar.
+
+**🟡 Deterioração temporal**
+> 2020 média 3.04 vs 2021 média 2.94 — satisfação piorando ao longo do tempo sem intervenção.
+
+**🟢 Canal Chat subutilizado**
+> Chat tem o menor volume (24.5%) mas a maior satisfação (3.08). Migrar 10% dos tickets de email para chat poderia elevar a satisfação acima de 3.0.
 
 ### Recomendações
 
 1. **Implementar SLA por prioridade** — Critical: 4h, High: 24h
-2. **Força-tarefa Refund Request + High** — combinação mais crítica
+2. **Força-tarefa Refund Request + High** — combinação mais crítica (2.80)
 3. **Incentivar canal Chat** — maior satisfação, menor volume
 4. **Suporte especializado 51+** — maior segmento, abaixo da média
 5. **Onboarding proativo** para Canon EOS e GoPro Hero
@@ -322,10 +385,11 @@ Dashboard gerencial com foco em tomada de decisão.
 | Decisão | Justificativa |
 |---------|--------------|
 | `inferSchema=false` na Bronze | Preservar dado bruto sem risco de conversão |
-| Nulos em Time_to_Resolution mantidos | Tickets abertos legitimamente não têm resolução |
+| Nulos em `Time_to_Resolution` mantidos | Tickets abertos legitimamente não têm resolução |
 | Produtos similares não consolidados | Decisão de negócio — não técnica |
 | `Description_Clean` sem limpeza profunda | Preservado para uso futuro em NLP |
-| `Is_Resolved` baseado em Status_ID=2 | Status "Closed" = único critério de resolução |
+| `Is_Resolved` baseado em `Status_ID=2` | Status "Closed" = único critério de resolução |
+| `Response_Time_Hours` com nulo explícito | Alinhado com Data Profiling — 33.3% sem resposta |
 
 ---
 
@@ -343,31 +407,36 @@ Dashboard gerencial com foco em tomada de decisão.
 git clone https://github.com/GiseleCp/customer-support-bi-databricks
 
 # 2. No Databricks, crie a estrutura de volumes
-# Catalog: workspace
-# Schema: default
-# Volume: raw
+# Catalog: workspace | Schema: default | Volume: raw
 
 # 3. Faça upload do CSV para o volume
 # /Volumes/workspace/default/raw/customer_support_tickets - original.csv
 
 # 4. Execute os notebooks em ordem
-# 01_bronze_ingestao.py
-# 02_silver_etl.py
-# 03_eda.py
-# 04_gold_modelagem.py
-# 05_eda_visualizacao.py
-# 06_bi_dashboard.py
+# 00_data_profiling
+# 01_bronze_ingestao
+# 02_silver_etl
+# 03_eda
+# 04_gold_modelagem
+# 05_eda_visualizacao
+# 06_bi_dashboard
+# 07_sql_queries
+# 08_time_travel
+# 09_register_tables
+
+# 5. Configure o Job no Databricks
+# Jobs & Pipelines → Create Job → pipeline_customer_support_bi
 ```
 
 ---
 
-## 📌 Pendências e Próximos Passos
+## 📌 Próximos Passos
 
-- [ ] Conexão Power BI → Databricks Gold
-- [ ] Dashboard interativo no Power BI
+- [ ] Dashboard interativo no Power BI conectado à Gold
 - [ ] Campo `Description_NLP` com limpeza profunda para análise de sentimento
-- [ ] Agendamento do pipeline com Databricks Jobs
-- [ ] Testes de qualidade de dados automatizados
+- [ ] Testes de qualidade automatizados na camada Gold
+- [ ] Alertas automáticos quando satisfação cair abaixo de 3.0
+- [ ] API REST para consumo dos dados da Gold
 
 ---
 
@@ -375,7 +444,7 @@ git clone https://github.com/GiseleCp/customer-support-bi-databricks
 
 **Gisele** — [github.com/GiseleCp](https://github.com/GiseleCp)
 
-Projeto desenvolvido como portfólio de **Engenharia e Análise de Dados** com foco em pipeline completo de BI usando Databricks.
+Projeto desenvolvido como portfólio de **Engenharia e Análise de Dados** com foco em pipeline completo de BI usando Databricks — do dado bruto ao dashboard gerencial.
 
 ---
 
