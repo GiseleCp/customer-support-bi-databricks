@@ -83,7 +83,8 @@ customer-support-bi-databricks/
 ├── assets/
 │   ├── Jobs & Pipeline.jpg               # Print do Job orquestrado no Databricks
 │   ├── Schedules & triggers.jpg          # Agendamento configurado para execução automática
-│   └── Tasks.jpg                         # Sequência das 8 tarefas do pipeline orquestrado           
+│   ├── Tasks.jpg                         # Sequência das 8 tarefas do pipeline orquestrado
+│   └── genie_dashboard.png        # Dashboard criado com Databricks Genie (IA generativa)          
 │
 ├── images/
 │   ├── eda/                           # Gráficos exploratórios
