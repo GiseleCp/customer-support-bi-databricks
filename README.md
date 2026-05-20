@@ -81,8 +81,9 @@ customer-support-bi-databricks/
 │   └── 09_register_tables.ipynb       # Registro das tabelas no Unity Catalog
 │
 ├── assets/
-│   ├── pipeline_job.png               # Print do Job orquestrado no Databricks
-│   └── ...                            # Prints do ambiente
+│   ├── Jobs & Pipeline.jpg               # Print do Job orquestrado no Databricks
+│   ├── Schedules & triggers.jpg          # Agendamento configurado para execução automática
+│   └── Tasks.jpg                         # Sequência das 8 tarefas do pipeline orquestrado           
 │
 ├── images/
 │   ├── eda/                           # Gráficos exploratórios
