@@ -431,7 +431,7 @@ git clone https://github.com/GiseleCp/customer-support-bi-databricks
 
 ---
 
-## 📌 Próximos Passos
+## 🔧 Em Desenvolvimento
 
 - [ ] Dashboard interativo no Power BI conectado à Gold
 - [ ] Campo `Description_NLP` com limpeza profunda para análise de sentimento
