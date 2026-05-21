@@ -78,7 +78,9 @@ customer-support-bi-databricks/
 │   ├── 06_bi_dashboard.ipynb          # 9 gráficos BI gerenciais
 │   ├── 07_sql_queries.ipynb           # SQL analítico + View consolidada
 │   ├── 08_time_travel.ipynb           # Delta Lake Time Travel e restauração
-│   └── 09_register_tables.ipynb       # Registro das tabelas no Unity Catalog
+│   ├── 09_register_tables.ipynb       # Registro das tabelas no Unity Catalog
+│   ├── 10_gold_quality_checks         # 22 testes automatizados de qualidade da Gold — fato, dimensões e integridade referencial
+│   └── 11_description_nlp             # Análise de sentimento e limpeza profunda do Ticket_Description — campo Description_NLP
 │
 ├── assets/
 │   ├── Jobs & Pipeline.jpg               # Print do Job orquestrado no Databricks
