@@ -439,6 +439,7 @@ git clone https://github.com/GiseleCp/customer-support-bi-databricks
 - [ ] Testes de qualidade automatizados na camada Gold
 - [ ] Alertas automáticos quando satisfação cair abaixo de 3.0
 - [ ] API REST para consumo dos dados da Gold
+- [ ] https://customersupporttickets.lovable.app
 
 ---
 
